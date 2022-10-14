@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
-	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
+	lambda "github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -18,12 +18,13 @@ func NewNotionSyncStack(scope constructs.Construct, id string, props *NotionSync
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
-	// The code that defines your stack goes here
+	functionName := jsii.String("rvx-lbd-as2-notion-sync")
 
-	// example resource
-	// queue := awssqs.NewQueue(stack, jsii.String("NotionSyncQueue"), &awssqs.QueueProps{
-	// 	VisibilityTimeout: awscdk.Duration_Seconds(jsii.Number(300)),
-	// })
+	lambda.NewDockerImageFunction(stack, functionName, &lambda.DockerImageFunctionProps{
+		Architecture: lambda.Architecture_ARM_64(),
+		FunctionName: functionName,
+		Code:         lambda.DockerImageCode_FromImageAsset(jsii.String("./lambda"), nil),
+	})
 
 	return stack
 }
