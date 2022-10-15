@@ -15,5 +15,9 @@ RUN go build -o /main
 # Runner image
 FROM alpine:3.16.2
 
+ENV NOTION_API_KEY ""
+ENV NOTION_DATABASE_ID ""
+ENV GITHUB_USER = ""
+
 COPY --from=builder /main /main
 ENTRYPOINT [ "/main" ]

@@ -5,6 +5,7 @@ import (
 	lambda "github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
+	"os"
 )
 
 type NotionSyncStackProps struct {
@@ -20,10 +21,21 @@ func NewNotionSyncStack(scope constructs.Construct, id string, props *NotionSync
 
 	functionName := jsii.String("rvx-lbd-as2-notion-sync")
 
+	notionApiKey := os.Getenv("NOTION_API_KEY")
+	notionDatabaseId := os.Getenv("NOTION_DATABASE_ID")
+	githubUser := os.Getenv("GITHUB_USER")
+
+	environmentVars := map[string]*string{
+		"NOTION_API_KEY":     &notionApiKey,
+		"NOTION_DATABASE_ID": &notionDatabaseId,
+		"GITHUB_USER":        &githubUser,
+	}
+
 	lambda.NewDockerImageFunction(stack, functionName, &lambda.DockerImageFunctionProps{
 		Architecture: lambda.Architecture_ARM_64(),
 		FunctionName: functionName,
 		Code:         lambda.DockerImageCode_FromImageAsset(jsii.String("./lambda"), nil),
+		Environment:  &environmentVars,
 	})
 
 	return stack
