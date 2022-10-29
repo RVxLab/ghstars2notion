@@ -20,3 +20,6 @@ cdk.out
 
 # Binary
 lambda/notion-sync
+
+# Coverage
+lambda/coverage.html

@@ -15,7 +15,10 @@ func HandleRequest() (string, error) {
 	config := config.GetConfig()
 
 	notionClient := goNotion.NewClient(config.NotionApiKey)
-	githubClient := goGithub.NewClient(nil)
+
+	githubClient := github.Client{
+		Starred: goGithub.NewClient(nil).Activity,
+	}
 
 	rows, err := notion.GetDatabaseRows(notionClient, config.NotionDatabaseId)
 
@@ -25,7 +28,7 @@ func HandleRequest() (string, error) {
 
 	fmt.Printf("Got %d rows\n", len(rows))
 
-	repos, err := github.GetStarredRepos(githubClient, config.GithubUser)
+	repos, err := githubClient.GetStarredRepos(config.GithubUser)
 
 	if repos == nil && err != nil {
 		return "Error fetching starred repos from GitHub", err
@@ -34,11 +37,6 @@ func HandleRequest() (string, error) {
 	fmt.Printf("Got %d repos\n", len(repos))
 
 	for _, repo := range repos {
-		// Due to allocations it's possible there is a nil here
-		if repo == nil {
-			continue
-		}
-
 		if rows[repo.Name] != nil {
 			fmt.Printf("Skipping creation of entry for repo %s as it already exists\n", repo.Name)
 

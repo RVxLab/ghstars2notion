@@ -2,37 +2,45 @@ package github
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/go-github/v47/github"
 )
 
 const reposPerPage = 30
 
-type starredRepo struct {
+type starredRepository struct {
 	Name            string
 	PrimaryLanguage string
 	Description     string
 	URL             string
 }
 
-func GetStarredRepos(client *github.Client, username string) ([]*starredRepo, error) {
-	repos, response, err := client.Activity.ListStarred(context.Background(), username, &github.ActivityListStarredOptions{
+type starredRepositories map[string]starredRepository
+
+type ListsStarredRepos interface {
+	ListStarred(ctx context.Context, user string, opts *github.ActivityListStarredOptions) ([]*github.StarredRepository, *github.Response, error)
+}
+
+type Client struct {
+	Starred ListsStarredRepos
+}
+
+func (client *Client) GetStarredRepos(username string) (starredRepositories, error) {
+	repos, response, err := client.Starred.ListStarred(context.Background(), username, &github.ActivityListStarredOptions{
 		ListOptions: github.ListOptions{
 			PerPage: reposPerPage,
 		},
 	})
 
 	if err != nil {
-		fmt.Printf("Remaining: %d, Limit: %d, Reset: %s", response.Rate.Remaining, response.Rate.Limit, response.Rate.Reset)
-
 		return nil, err
 	}
 
-	var starredRepoSlices [][]*starredRepo
-	starredRepoSlices = append(starredRepoSlices, processRepos(repos))
+	starredRepos := make(starredRepositories)
+
+	processRepos(repos, &starredRepos)
 
 	for response.NextPage > 0 {
-		repos, response, err = client.Activity.ListStarred(context.Background(), username, &github.ActivityListStarredOptions{
+		repos, response, err = client.Starred.ListStarred(context.Background(), username, &github.ActivityListStarredOptions{
 			ListOptions: github.ListOptions{
 				PerPage: reposPerPage,
 				Page:    response.NextPage,
@@ -43,22 +51,14 @@ func GetStarredRepos(client *github.Client, username string) ([]*starredRepo, er
 			return nil, err
 		}
 
-		starredRepoSlices = append(starredRepoSlices, processRepos(repos))
-	}
-
-	var starredRepos []*starredRepo
-
-	for _, starredRepoSlice := range starredRepoSlices {
-		starredRepos = append(starredRepos, starredRepoSlice...)
+		processRepos(repos, &starredRepos)
 	}
 
 	return starredRepos, nil
 }
 
-func processRepos(repos []*github.StarredRepository) []*starredRepo {
-	newRepos := make([]*starredRepo, reposPerPage)
-
-	for i, repo := range repos {
+func processRepos(repos []*github.StarredRepository, starredRepos *starredRepositories) {
+	for _, repo := range repos {
 		actualRepo := repo.GetRepository()
 
 		language := actualRepo.GetLanguage()
@@ -67,13 +67,13 @@ func processRepos(repos []*github.StarredRepository) []*starredRepo {
 			language = "Unknown"
 		}
 
-		newRepos[i] = &starredRepo{
-			Name:            actualRepo.GetFullName(),
+		repoName := actualRepo.GetFullName()
+
+		(*starredRepos)[repoName] = starredRepository{
+			Name:            repoName,
 			Description:     actualRepo.GetDescription(),
 			PrimaryLanguage: language,
 			URL:             actualRepo.GetSVNURL(),
 		}
 	}
-
-	return newRepos
 }
