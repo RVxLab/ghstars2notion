@@ -14,7 +14,7 @@ type starredRepository struct {
 	URL             string
 }
 
-type starredRepositories map[string]starredRepository
+type StarredRepositories map[string]starredRepository
 
 type ListsStarredRepos interface {
 	ListStarred(ctx context.Context, user string, opts *github.ActivityListStarredOptions) ([]*github.StarredRepository, *github.Response, error)
@@ -24,7 +24,7 @@ type Client struct {
 	Starred ListsStarredRepos
 }
 
-func (client *Client) GetStarredRepos(username string) (starredRepositories, error) {
+func (client *Client) GetStarredRepos(username string) (StarredRepositories, error) {
 	repos, response, err := client.Starred.ListStarred(context.Background(), username, &github.ActivityListStarredOptions{
 		ListOptions: github.ListOptions{
 			PerPage: reposPerPage,
@@ -35,7 +35,7 @@ func (client *Client) GetStarredRepos(username string) (starredRepositories, err
 		return nil, err
 	}
 
-	starredRepos := make(starredRepositories)
+	starredRepos := make(StarredRepositories)
 
 	processRepos(repos, &starredRepos)
 
@@ -57,7 +57,7 @@ func (client *Client) GetStarredRepos(username string) (starredRepositories, err
 	return starredRepos, nil
 }
 
-func processRepos(repos []*github.StarredRepository, starredRepos *starredRepositories) {
+func processRepos(repos []*github.StarredRepository, starredRepos *StarredRepositories) {
 	for _, repo := range repos {
 		actualRepo := repo.GetRepository()
 

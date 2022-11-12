@@ -1,6 +1,6 @@
 package notion
 
-func (row *DatabaseRow) GetSlug() string {
+func (row *databaseRow) GetSlug() string {
 	slug := ""
 
 	for _, titlePart := range row.Name.Title {

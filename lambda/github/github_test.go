@@ -102,7 +102,7 @@ func TestGetStarredRepos(t *testing.T) {
 
 	repos, _ := client.GetStarredRepos("Test user")
 
-	expectedRepos := starredRepositories{
+	expectedRepos := StarredRepositories{
 		"User/Repo1": {
 			Name:            "User/Repo1",
 			Description:     "PHP library that does things",
@@ -130,7 +130,7 @@ func TestGetStarredRepos(t *testing.T) {
 	}
 
 	if !cmp.Equal(repos, expectedRepos) {
-		t.Errorf("Expected output from GetStarredRepos, got=%s", cmp.Diff(expectedRepos, repos))
+		t.Errorf("Unexpected output from GetStarredRepos, got=%s", cmp.Diff(expectedRepos, repos))
 	}
 }
 

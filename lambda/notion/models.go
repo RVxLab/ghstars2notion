@@ -2,33 +2,35 @@ package notion
 
 import "github.com/dstotijn/go-notion"
 
-type DatabaseRow struct {
-	Name            *NameField            `json:"Name"`
-	Description     *DescriptionField     `json:"Description"`
-	PrimaryLanguage *PrimaryLanguageField `json:"Primary Language"`
-	URL             *URLField             `json:"URL"`
+type databaseRow struct {
+	Name            nameField            `json:"Name"`
+	Description     descriptionField     `json:"Description"`
+	PrimaryLanguage primaryLanguageField `json:"Primary Language"`
+	URL             urlField             `json:"URL"`
 }
 
-type NameField struct {
-	Id    string             `json:"id"`
-	Title []*notion.RichText `json:"title"`
-	Type  string             `json:"type"`
+type nameField struct {
+	Id    string            `json:"id"`
+	Title []notion.RichText `json:"title"`
+	Type  string            `json:"type"`
 }
 
-type DescriptionField struct {
-	Id       string             `json:"id"`
-	RichText []*notion.RichText `json:"rich_text"`
-	Type     string             `json:"type"`
+type descriptionField struct {
+	Id       string            `json:"id"`
+	RichText []notion.RichText `json:"rich_text"`
+	Type     string            `json:"type"`
 }
 
-type URLField struct {
+type urlField struct {
 	Id   string `json:"id"`
 	Type string `json:"type"`
 	Url  string `json:"url"`
 }
 
-type PrimaryLanguageField struct {
+type primaryLanguageField struct {
 	Id     string                `json:"id"`
 	Select *notion.SelectOptions `json:"select"`
 	Type   string                `json:"type"`
 }
+
+type Pages map[string]databaseRow
