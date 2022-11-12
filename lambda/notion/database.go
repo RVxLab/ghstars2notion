@@ -9,3 +9,7 @@ func (row *databaseRow) GetSlug() string {
 
 	return slug
 }
+
+func (row *databaseRow) GetPlainTextName() string {
+	return row.Name.Title[0].PlainText
+}

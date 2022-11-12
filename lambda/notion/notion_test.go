@@ -11,7 +11,7 @@ import (
 
 var testPages = []notion.Page{
 	{
-		ID: "Page1",
+		ID: "P1",
 		Properties: notion.DatabasePageProperties{
 			"URL": {
 				ID:   "Url1",
@@ -72,7 +72,7 @@ var testPages = []notion.Page{
 		},
 	},
 	{
-		ID: "Page2",
+		ID: "P2",
 		Properties: notion.DatabasePageProperties{
 			"URL": {
 				ID:   "Url2",
@@ -216,47 +216,53 @@ func TestGetDatabaseRows(t *testing.T) {
 
 	expectedRows := Pages{
 		"Page 1": {
-			Name: nameField{
-				Id:    "title",
-				Type:  "title",
-				Title: page1Properties["Name"].Title,
-			},
-			Description: descriptionField{
-				Id:       "Desc1",
-				Type:     "rich_text",
-				RichText: page1Properties["Description"].RichText,
-			},
-			URL: urlField{
-				Id:   "Url1",
-				Type: "url",
-				Url:  "https://example.com/page1",
-			},
-			PrimaryLanguage: primaryLanguageField{
-				Id:     "Lang1",
-				Type:   "select",
-				Select: page1Properties["Primary Language"].Select,
+			ID: "P1",
+			DB: databaseRow{
+				Name: nameField{
+					ID:    "title",
+					Type:  "title",
+					Title: page1Properties["Name"].Title,
+				},
+				Description: descriptionField{
+					ID:       "Desc1",
+					Type:     "rich_text",
+					RichText: page1Properties["Description"].RichText,
+				},
+				URL: urlField{
+					ID:   "Url1",
+					Type: "url",
+					Url:  "https://example.com/page1",
+				},
+				PrimaryLanguage: primaryLanguageField{
+					ID:     "Lang1",
+					Type:   "select",
+					Select: page1Properties["Primary Language"].Select,
+				},
 			},
 		},
 		"Page 2": {
-			Name: nameField{
-				Id:    "title",
-				Type:  "title",
-				Title: page2Properties["Name"].Title,
-			},
-			Description: descriptionField{
-				Id:       "Desc2",
-				Type:     "rich_text",
-				RichText: page2Properties["Description"].RichText,
-			},
-			URL: urlField{
-				Id:   "Url2",
-				Type: "url",
-				Url:  "https://example.com/page2",
-			},
-			PrimaryLanguage: primaryLanguageField{
-				Id:     "Lang2",
-				Type:   "select",
-				Select: page2Properties["Primary Language"].Select,
+			ID: "P2",
+			DB: databaseRow{
+				Name: nameField{
+					ID:    "title",
+					Type:  "title",
+					Title: page2Properties["Name"].Title,
+				},
+				Description: descriptionField{
+					ID:       "Desc2",
+					Type:     "rich_text",
+					RichText: page2Properties["Description"].RichText,
+				},
+				URL: urlField{
+					ID:   "Url2",
+					Type: "url",
+					Url:  "https://example.com/page2",
+				},
+				PrimaryLanguage: primaryLanguageField{
+					ID:     "Lang2",
+					Type:   "select",
+					Select: page2Properties["Primary Language"].Select,
+				},
 			},
 		},
 	}

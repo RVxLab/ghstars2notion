@@ -41,13 +41,13 @@ func (client Client) GetDatabaseRows(databaseId string) (Pages, error) {
 }
 
 func processPages(notionPages *[]notion.Page, pages *Pages) {
-	for _, page := range *notionPages {
+	for _, notionPage := range *notionPages {
 		var row databaseRow
 
-		bytes, err := json.Marshal(page.Properties)
+		bytes, err := json.Marshal(notionPage.Properties)
 
 		if err != nil {
-			fmt.Println(fmt.Errorf("failed to encode properties for page %s", page.ID))
+			fmt.Println(fmt.Errorf("failed to encode properties for page %s", notionPage.ID))
 
 			continue
 		}
@@ -55,11 +55,14 @@ func processPages(notionPages *[]notion.Page, pages *Pages) {
 		err = json.Unmarshal(bytes, &row)
 
 		if err != nil {
-			fmt.Println(fmt.Errorf("failed to decode properies for page %s", page.ID))
+			fmt.Println(fmt.Errorf("failed to decode properies for page %s", notionPage.ID))
 
 			continue
 		}
 
-		(*pages)[row.GetSlug()] = row
+		(*pages)[row.GetSlug()] = page{
+			ID: notionPage.ID,
+			DB: row,
+		}
 	}
 }

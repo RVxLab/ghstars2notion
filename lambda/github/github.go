@@ -7,14 +7,14 @@ import (
 
 const reposPerPage = 30
 
-type starredRepository struct {
+type StarredRepository struct {
 	Name            string
 	PrimaryLanguage string
 	Description     string
 	URL             string
 }
 
-type StarredRepositories map[string]starredRepository
+type StarredRepositories map[string]StarredRepository
 
 type ListsStarredRepos interface {
 	ListStarred(ctx context.Context, user string, opts *github.ActivityListStarredOptions) ([]*github.StarredRepository, *github.Response, error)
@@ -69,7 +69,7 @@ func processRepos(repos []*github.StarredRepository, starredRepos *StarredReposi
 
 		repoName := actualRepo.GetFullName()
 
-		(*starredRepos)[repoName] = starredRepository{
+		(*starredRepos)[repoName] = StarredRepository{
 			Name:            repoName,
 			Description:     actualRepo.GetDescription(),
 			PrimaryLanguage: language,
