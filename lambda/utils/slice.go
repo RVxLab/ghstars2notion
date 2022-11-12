@@ -1,11 +1,11 @@
 package utils
 
-func Map[TValue any](slice []TValue, mappingFunc func(value TValue) TValue) []TValue {
-	mapped := make([]TValue, len(slice))
-
-	for i, value := range slice {
-		mapped[i] = mappingFunc(value)
+func Contains[T comparable](slice []T, value T) bool {
+	for _, v := range slice {
+		if v == value {
+			return true
+		}
 	}
 
-	return mapped
+	return false
 }
