@@ -3,9 +3,9 @@ package github
 import (
 	"context"
 	"fmt"
+	"g2stars2notion/lambda/utils"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-github/v47/github"
-	"notion-sync/lambda/utils"
 	"testing"
 )
 

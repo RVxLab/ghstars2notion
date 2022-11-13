@@ -1,6 +1,6 @@
 package diff
 
-import "notion-sync/lambda/utils"
+import "g2stars2notion/lambda/utils"
 
 type Diff struct {
 	Added   []string

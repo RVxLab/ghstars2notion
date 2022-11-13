@@ -1,4 +1,4 @@
-module notion-sync
+module ghstars2notion
 
 go 1.18
 

@@ -19,7 +19,10 @@
 cdk.out
 
 # Binary
-lambda/notion-sync
+lambda/ghstars2notion
 
 # Coverage
 lambda/coverage.html
+
+# Misc
+.env

@@ -1,4 +1,4 @@
-module notion-sync/lambda
+module g2stars2notion/lambda
 
 go 1.19
 

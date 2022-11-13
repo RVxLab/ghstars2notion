@@ -9,13 +9,13 @@ package main
 // )
 
 // example tests. To run these tests, uncomment this file along with the
-// example resource in notion-sync_test.go
+// example resource in ghstars2notion_test.go
 // func TestNotionSyncStack(t *testing.T) {
 // 	// GIVEN
 // 	app := awscdk.NewApp(nil)
 
 // 	// WHEN
-// 	stack := NewNotionSyncStack(app, "MyStack", nil)
+// 	stack := NewGHStars2NotionStack(app, "MyStack", nil)
 
 // 	// THEN
 // 	template := assertions.Template_FromStack(stack)

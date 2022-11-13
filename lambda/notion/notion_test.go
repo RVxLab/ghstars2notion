@@ -3,9 +3,9 @@ package notion
 import (
 	"context"
 	"fmt"
+	"g2stars2notion/lambda/utils"
 	"github.com/dstotijn/go-notion"
 	"github.com/google/go-cmp/cmp"
-	"notion-sync/lambda/utils"
 	"testing"
 )
 

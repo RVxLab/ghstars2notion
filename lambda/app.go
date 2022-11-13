@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"g2stars2notion/lambda/config"
+	"g2stars2notion/lambda/diff"
+	"g2stars2notion/lambda/github"
+	"g2stars2notion/lambda/notion"
+	"g2stars2notion/lambda/utils"
 	goNotion "github.com/dstotijn/go-notion"
 	goGithub "github.com/google/go-github/v47/github"
-	"notion-sync/lambda/config"
-	"notion-sync/lambda/diff"
-	"notion-sync/lambda/github"
-	"notion-sync/lambda/notion"
-	"notion-sync/lambda/utils"
 )
 
 func makePagePropertiesPayload(repo github.StarredRepository) goNotion.DatabasePageProperties {
