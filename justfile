@@ -2,7 +2,7 @@ set dotenv-load
 
 # Deploy the stack
 deploy:
-    @cdk deploy -c notionApiKey="$NOTION_API_KEY" -c notionDatabaseId="$NOTION_DATABASE_ID" -c githubUser="$GITHUB_USER"
+    cdk deploy -c notionApiKey="$NOTION_API_KEY" -c notionDatabaseId="$NOTION_DATABASE_ID" -c githubUser="$GITHUB_USER"
 
 # Format code
 format:

@@ -11,8 +11,6 @@ import (
 	"os"
 )
 
-const SEPARATOR = "======================================="
-
 type GHStars2NotionProps struct {
 	awscdk.StackProps
 }
@@ -20,23 +18,32 @@ type GHStars2NotionProps struct {
 func NewGHStars2NotionStack(scope constructs.Construct, id string, props *GHStars2NotionProps) awscdk.Stack {
 	var sProps awscdk.StackProps
 
-	defer jsii.Close()
-
 	if props != nil {
 		sProps = props.StackProps
 	}
 
 	stack := awscdk.NewStack(scope, &id, &sProps)
+	node := stack.Node()
 
-	functionName := jsii.String("rvx-lbd-as2-ghstars2notion-gh-notion-sync")
+	var notionApiKey, notionDatabaseId, githubUser string
 
-	notionApiKey := os.Getenv("NOTION_API_KEY")
-	notionDatabaseId := os.Getenv("NOTION_DATABASE_ID")
-	githubUser := os.Getenv("GITHUB_USER")
+	if val, err := getContextAsString(&node, "notionApiKey"); err != nil {
+		panic(err)
+	} else {
+		notionApiKey = val
+	}
 
-	os.Exit(99)
+	if val, err := getContextAsString(&node, "notionDatabaseId"); err != nil {
+		panic(err)
+	} else {
+		notionDatabaseId = val
+	}
 
-	fmt.Printf("ENV VARS\n%s\nNOTION_API_KEY=%s\nNOTION_DATABASE_ID=%s\nGITHUB_USER=%s\n%s\n", SEPARATOR, notionApiKey, notionDatabaseId, githubUser, SEPARATOR)
+	if val, err := getContextAsString(&node, "githubUser"); err != nil {
+		panic(err)
+	} else {
+		githubUser = val
+	}
 
 	environmentVars := map[string]*string{
 		"NOTION_API_KEY":     &notionApiKey,
@@ -44,12 +51,15 @@ func NewGHStars2NotionStack(scope constructs.Construct, id string, props *GHStar
 		"GITHUB_USER":        &githubUser,
 	}
 
+	functionName := jsii.String("rvx-lbd-as2-ghstars2notion-gh-notion-sync")
+
 	lambdaFunc := lambda.NewDockerImageFunction(stack, functionName, &lambda.DockerImageFunctionProps{
 		Architecture: lambda.Architecture_ARM_64(),
 		Code:         lambda.DockerImageCode_FromImageAsset(jsii.String("./lambda"), nil),
 		Description:  jsii.String("Lambda function that syncs GitHub stars to a Notion database"),
 		Environment:  &environmentVars,
 		FunctionName: functionName,
+		Timeout:      awscdk.Duration_Seconds(jsii.Number(10)),
 	})
 
 	ebRuleName := jsii.String("rvx-evb-as2-ghstars2notion")
@@ -95,4 +105,12 @@ func env() *awscdk.Environment {
 		Account: jsii.String(account),
 		Region:  jsii.String(region),
 	}
+}
+
+func getContextAsString(node *constructs.Node, varName string) (string, error) {
+	if val := (*node).TryGetContext(jsii.String(varName)); val != nil {
+		return val.(string), nil
+	}
+
+	return "", fmt.Errorf("%s was not found in context", varName)
 }
