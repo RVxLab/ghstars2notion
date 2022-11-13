@@ -1,12 +1,34 @@
-# Welcome to your CDK Go project!
+# GitHub Stars to Notion
 
-This is a blank project for CDK development with Go.
+An AWS Lambda project that loads starred repos from your GitHub account and pushes them to a Notion database.
 
-The `cdk.json` file tells the CDK toolkit how to execute your app.
+This project is built with AWS CDK.
 
-## Useful commands
+## Motivation
 
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
- * `go test`         run unit tests
+I wanted to be able to keep easy track of useful GitHub projects from an easy-to-use overview.
+I found that this would make a good project to improve my skills around AWS, especially the serverless side and Cloudformation.
+
+I also wanted to learn Go.
+
+## AWS services used
+
+- Lambda
+- EventBridge
+- ECR
+
+
+## Features
+
+- Repo diffing by checking which repos are starred and which are in the Notion database
+- Adding and deleting rows
+
+## Known issues
+
+- Lambda will exit with a Runtime.ExitError, stating the runtime exited without providing a reason
+  - The Lambda function will work just fine
+
+
+## TODO
+
+- Docs on building and deploying the function

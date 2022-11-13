@@ -1,4 +1,8 @@
-FROM golang:1.18-alpine3.16 as builder
+FROM public.ecr.aws/lambda/provided:al2 as builder
+
+# install compiler
+RUN yum install -y golang
+RUN go env -w GOPROXY=direct
 
 # Builder dir
 RUN mkdir build
@@ -13,7 +17,7 @@ ADD . .
 RUN go build -o /main
 
 # Runner image
-FROM alpine:3.16.2
+FROM public.ecr.aws/lambda/provided:al2
 
 ENV NOTION_API_KEY ""
 ENV NOTION_DATABASE_ID ""
